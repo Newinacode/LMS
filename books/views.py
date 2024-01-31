@@ -89,7 +89,11 @@ class BookViewSet(viewsets.ModelViewSet):
 
         return Response({"data":"Book is not available"}, status=status.HTTP_204_NO_CONTENT)
 
-            
+    @action(detail=False,method=["get"])
+    def get_all_borrowed_book(self,request):
+        borrowedBook = self.queryset.filter(in_library=False)
+        data = BookSerializer(borrowedBook,many=True).data
+        return Response({'data': data},status=status.HTTP_200_OK)
         
 
         
