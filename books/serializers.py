@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Book,BookDetail
+from .models import Book,BookDetail,BorrowedBook
 
 class BookDetailSerializer(serializers.ModelSerializer):
 
@@ -44,3 +44,18 @@ class BookSerializer(serializers.ModelSerializer):
 
         return instance
 
+class BorrowBookSerializer(serializers.ModelSerializer):
+    class Meta: 
+        model = BorrowedBook
+        fields  = '__all__'
+
+
+    def create(self,validated_data):
+        borrowed_book = BorrowedBook.objects.create(**validated_data)
+        return borrowed_book
+
+    def update(self,instance,validated_data):
+        instance.return_date =validated_data.get('return_date', instance.return_date)
+        instance.save()
+        return instance
+        
